@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Reflection;
+using System.Text;
 
 namespace PuzzleSolver.Core;
 
@@ -34,22 +36,25 @@ public abstract class BasePuzzle
 
     private IEnumerable<string> GetInput()
     {
-        var fileName = @$".\Inputs\{GetType().Name}.txt";
-        try
-        {
-            return File.ReadLines(fileName);
-        }
-        catch (Exception e) when (e is DirectoryNotFoundException
-                                      or FileNotFoundException
-                                      or IOException)
-        {
-            Console.WriteLine($"Unable to open {fileName}");
+        var assembly = Assembly.GetEntryAssembly();
+
+        if (assembly == null)
             return new List<string>();
-        }
-        catch (Exception e)
+        
+        var resourceName = $"{assembly.GetName().Name}.Inputs.{GetType().Name}.txt";
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+        if (stream == null) 
+            return new List<string>();
+        
+        using var reader = new StreamReader(stream);
+        return ReadLines(reader).ToList();
+    }
+
+    private static IEnumerable<string> ReadLines(TextReader reader)
+    {
+        while (reader.ReadLine() is { } line)
         {
-            Console.WriteLine(e);
-            throw;
+            yield return line;
         }
     }
 }
