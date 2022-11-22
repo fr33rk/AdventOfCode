@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace PuzzleSolver.Core;
 
@@ -16,6 +16,14 @@ public abstract class BasePuzzle
         ExecuteSolve("Part 1 - Test input", () => SolvePart1(testInput));
         ExecuteSolve("Part 1 - Real input", () => SolvePart1(realInput));
         ExecuteSolve("Part 2 - Test input", () => SolvePart2(testInput));
+        ExecuteSolve("Part 2 - Real input", () => SolvePart2(realInput));
+    }
+
+    [Benchmark]
+    public void BenchmarkSolve()
+    {
+        var realInput = GetInput().ToList();
+        ExecuteSolve("Part 1 - Real input", () => SolvePart1(realInput));
         ExecuteSolve("Part 2 - Real input", () => SolvePart2(realInput));
     }
 

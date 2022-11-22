@@ -2,6 +2,13 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
+        <Configurations>Debug;Release;Benchmark</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Benchmark' ">
+      <DefineConstants>TRACE;BENCHMARK</DefineConstants>
+      <Optimize>true</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,5 +19,9 @@
         <EmbeddedResource Include="Inputs/*.txt" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+      <PackageReference Include="morelinq" Version="3.3.2" />
+    </ItemGroup>
 
 </Project>

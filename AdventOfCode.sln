@@ -8,15 +8,20 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Benchmark|Any CPU = Benchmark|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CA47E103-94FD-44BD-97C4-5814A54714CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA47E103-94FD-44BD-97C4-5814A54714CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA47E103-94FD-44BD-97C4-5814A54714CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA47E103-94FD-44BD-97C4-5814A54714CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA47E103-94FD-44BD-97C4-5814A54714CA}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{CA47E103-94FD-44BD-97C4-5814A54714CA}.Benchmark|Any CPU.Build.0 = Release|Any CPU
 		{180DE0D5-9873-418E-9EC0-5061A99F0E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{180DE0D5-9873-418E-9EC0-5061A99F0E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{180DE0D5-9873-418E-9EC0-5061A99F0E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{180DE0D5-9873-418E-9EC0-5061A99F0E55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{180DE0D5-9873-418E-9EC0-5061A99F0E55}.Benchmark|Any CPU.ActiveCfg = Benchmark|Any CPU
+		{180DE0D5-9873-418E-9EC0-5061A99F0E55}.Benchmark|Any CPU.Build.0 = Benchmark|Any CPU
 	EndGlobalSection
 EndGlobal
