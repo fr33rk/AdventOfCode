@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using MoreLinq.Extensions;
 using PuzzleSolver.Core;
 
 namespace AoC2021;
@@ -8,9 +9,10 @@ public class Puzzle5 : BasePuzzle
     protected override void SolvePart1(IEnumerable<string> input)
     {
         var lineRegex = new Regex(@"(\d+),(\d+) -> (\d+),(\d+)", RegexOptions.Compiled);
+        // Todo: Create a floor based on the max value of the input.
         var oceanFloor = new OceanFloor();
-        
-        var lines = input
+
+        input
             .Select(i =>
             {
                 var match = lineRegex.Match(i);
@@ -20,11 +22,13 @@ public class Puzzle5 : BasePuzzle
                     End = new Point(Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value)),
                 };
             })
-            .Where(line => line.Start.X == line.End.X || line.Start.Y == line.End.Y);
+            .Where(line => line.Start.X == line.End.X || line.Start.Y == line.End.Y)
+            .ForEach(line => oceanFloor.AddLine(line.Start, line.End));
         
+        // Todo: Only when 10x10
         oceanFloor.ToConsole();
 
-
+        Console.WriteLine($"Answer: {oceanFloor.CountIntersections()}");
     }
 
     protected override void SolvePart2(IEnumerable<string> input)
@@ -53,11 +57,11 @@ public class Puzzle5 : BasePuzzle
 
     private class OceanFloor
     {
-        private short[,] _diagram;
+        private readonly short[,] _diagram;
 
         public OceanFloor()
         {
-            _diagram = new short[9,9];
+            _diagram = new short[1000,1000];
         }
 
         public void ToConsole()
@@ -75,9 +79,30 @@ public class Puzzle5 : BasePuzzle
 
         public void AddLine(Point start, Point end)
         {
-            _diagram[start.X, start.Y]++;
-            
-            
+            if (start.Y == end.Y) // Vertical line
+            {
+                for (var i = Math.Min(start.X, end.X); i <= Math.Max(start.X, end.X); i++)
+                {
+                    _diagram[start.Y, i]++;
+                }
+            }
+            else if (start.X == end.X)
+            {
+                // Horizontal line
+                for (var i = Math.Min(start.Y, end.Y); i <= Math.Max(start.Y, end.Y); i++)
+                {
+                    _diagram[i, start.X]++;
+                }
+            }
+            else
+            {
+                var rc = (start.X - end.X) / (start.Y - end.Y);
+            }
+        }
+
+        public int CountIntersections()
+        {
+            return _diagram.Cast<short>().Count(x => x > 1);
         }
     }
 }
