@@ -8,24 +8,13 @@ public class Puzzle5 : BasePuzzle
 {
     protected override void SolvePart1(IEnumerable<string> input)
     {
-        var lineRegex = new Regex(@"(\d+),(\d+) -> (\d+),(\d+)", RegexOptions.Compiled);
-        // Todo: Create a floor based on the max value of the input.
-        var oceanFloor = new OceanFloor();
-
-        input
-            .Select(i =>
-            {
-                var match = lineRegex.Match(i);
-                return new
-                {
-                    Start = new Point(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value)),
-                    End = new Point(Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value)),
-                };
-            })
+        var lines = GetLines(input)
             .Where(line => line.Start.X == line.End.X || line.Start.Y == line.End.Y)
-            .ForEach(line => oceanFloor.AddLine(line.Start, line.End));
+            .ToList();
+
+        var oceanFloor = CreateFittingOceanFloor(lines);
         
-        // Todo: Only when 10x10
+        lines.ForEach(line => oceanFloor.AddLine(line));
         oceanFloor.ToConsole();
 
         Console.WriteLine($"Answer: {oceanFloor.CountIntersections()}");
@@ -33,7 +22,15 @@ public class Puzzle5 : BasePuzzle
 
     protected override void SolvePart2(IEnumerable<string> input)
     {
+        var lines = GetLines(input)
+            .ToList();
+
+        var oceanFloor = CreateFittingOceanFloor(lines);
         
+        lines.ForEach(line => oceanFloor.AddLine(line));
+        oceanFloor.ToConsole();
+
+        Console.WriteLine($"Answer: {oceanFloor.CountIntersections()}");
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -53,19 +50,48 @@ public class Puzzle5 : BasePuzzle
         };
     }
 
+    private static IEnumerable<Line> GetLines(IEnumerable<string> input)
+    {
+        var lineRegex = new Regex(@"(\d+),(\d+) -> (\d+),(\d+)", RegexOptions.Compiled);
+
+        return input
+            .Select(i =>
+            {
+                var match = lineRegex.Match(i);
+                return new Line(
+                    Start: new Point(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value)),
+                    End: new Point(Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value))
+                );
+            });
+    }
+
+    private static OceanFloor CreateFittingOceanFloor(IEnumerable<Line> lines)
+    {
+        var maxSize = lines
+            .SelectMany(line => new List<int> { line.Start.X, line.Start.Y, line.End.X, line.End.Y })
+            .Max();
+            
+        return new OceanFloor(maxSize + 1);
+    }
+
     private record Point(int X, int Y);
 
+    private record Line(Point Start, Point End);
+    
     private class OceanFloor
     {
         private readonly short[,] _diagram;
 
-        public OceanFloor()
+        public OceanFloor(int size)
         {
-            _diagram = new short[1000,1000];
+            _diagram = new short[size,size];
         }
 
         public void ToConsole()
         {
+            if (_diagram.GetLength(0) > 10)
+                return;
+            
             for (var x = 0; x < _diagram.GetLength(0); x++)
             {
                 for (var y = 0; y < _diagram.GetLength(1); y++)
@@ -77,26 +103,36 @@ public class Puzzle5 : BasePuzzle
             }
         }
 
-        public void AddLine(Point start, Point end)
+        public void AddLine(Line line)
         {
-            if (start.Y == end.Y) // Vertical line
+            if (line.Start.Y == line.End.Y) 
             {
-                for (var i = Math.Min(start.X, end.X); i <= Math.Max(start.X, end.X); i++)
+                // Vertical line
+                for (var i = Math.Min(line.Start.X, line.End.X); i <= Math.Max(line.Start.X, line.End.X); i++)
                 {
-                    _diagram[start.Y, i]++;
+                    _diagram[line.Start.Y, i]++;
                 }
             }
-            else if (start.X == end.X)
+            else if (line.Start.X == line.End.X)
             {
                 // Horizontal line
-                for (var i = Math.Min(start.Y, end.Y); i <= Math.Max(start.Y, end.Y); i++)
+                for (var i = Math.Min(line.Start.Y, line.End.Y); i <= Math.Max(line.Start.Y, line.End.Y); i++)
                 {
-                    _diagram[i, start.X]++;
+                    _diagram[i, line.Start.X]++;
                 }
             }
             else
             {
-                var rc = (start.X - end.X) / (start.Y - end.Y);
+                var rc = (line.Start.X - line.End.X) / (line.Start.Y - line.End.Y);
+                var length = Math.Abs(line.Start.X - line.End.X);
+                var origen = line.Start.X < line.End.X ? line.Start : line.End; 
+                
+                for (var i = 0; i <= length; i++)
+                {
+                    var x = origen.X + i;
+                    var y = origen.Y + i * rc;
+                    _diagram[y, x]++;
+                }
             }
         }
 
