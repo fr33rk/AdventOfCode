@@ -1,3 +1,4 @@
+using System.Collections;
 using MoreLinq;
 using PuzzleSolver.Core;
 
@@ -26,37 +27,36 @@ public class Puzzle6 : BasePuzzle
     protected override void SolvePart2(IEnumerable<string> input)
     {
         var rawInput = input.FirstOrDefault();
-        if (rawInput == null || rawInput.Length > 10)
+        if (rawInput == null)
             return;
 
-        var lanternFishes = rawInput.Split(',').Select(x => Convert.ToInt32(x)).ToList();
+        var adultFishes = rawInput
+            .Split(',')
+            .Select(x => Convert.ToInt32(x))
+            .Concat(Enumerable.Range(0, 7))
+            .GroupBy(x => x)
+            .Select(group => new { Age = group.Key, Count = group.Count() - 1 })
+            .OrderBy(group => group.Age)
+            .Select(group => Convert.ToInt64(group.Count))
+            .ToArray();
         
-        for (var day = 1; day <= 100; day++)
+        var embryoFishes = 0L;
+        var babyFishes = 0L;
+        var childFishes = 0L;
+        var zeroIndex = 0;
+        var newAdultIndex = 6;
+        
+        for (var day = 1; day <= 256; day++)
         {
-            Console.Write($"Day {day}: (+{lanternFishes.Count(x => x == 0)})");
-            
-            lanternFishes.AddRange(Enumerable.Repeat(9, lanternFishes.Count(x => x == 0)));
-            
-            for (var index = 0; index < lanternFishes.Count; index++)
-            {
-                if (lanternFishes[index] == 0)
-                {
-                    lanternFishes[index] = 6;
-                }
-                else
-                {
-                    lanternFishes[index]--;
-                }
-            }
-            
-            //Console.SetCursorPosition(0, Console.CursorTop);
-            Console.WriteLine($": {lanternFishes.Count}");
-            //lanternFishes.ForEach(x => Console.Write($"{x}, "));
-            //Console.WriteLine();
+            zeroIndex = ++zeroIndex % 7;
+            newAdultIndex = ++newAdultIndex % 7;
+            adultFishes[newAdultIndex] += childFishes;
+            childFishes = babyFishes;
+            babyFishes = embryoFishes;
+            embryoFishes = adultFishes[zeroIndex];
         }
-        Console.WriteLine();
-        Console.WriteLine($"Answer: {lanternFishes.Count()}");
         
+        Console.WriteLine($"Answer: {adultFishes.Sum() + babyFishes + childFishes}");
     }
 
     protected override IEnumerable<string> GetTestInput()
