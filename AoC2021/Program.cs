@@ -22,3 +22,5 @@ var puzzle = (BasePuzzle)Activator.CreateInstance(puzzleTypes.Last())!;
     //     puzzleToSolve.Solve();
     // }
 #endif
+
+Console.ReadKey();
