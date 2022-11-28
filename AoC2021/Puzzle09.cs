@@ -1,10 +1,8 @@
-using System.Runtime.CompilerServices;
-using MoreLinq.Extensions;
 using PuzzleSolver.Core;
 
 namespace AoC2021;
 
-public class Puzzle9 : BasePuzzle
+public class Puzzle09 : BasePuzzle
 {
     protected override void SolvePart1(IEnumerable<string> input)
     {
@@ -20,7 +18,7 @@ public class Puzzle9 : BasePuzzle
             .Select(sample => sample.Depth + 1)
             .Sum();
         
-        Console.WriteLine($"Änswer: {answer}");
+        Console.WriteLine($"Answer: {answer}");
     }
 
     protected override void SolvePart2(IEnumerable<string> input)
@@ -164,7 +162,7 @@ public class Puzzle9 : BasePuzzle
         }
         
         public bool HasId => BasinId != null && BasinId != int.MaxValue;
-        public int Depth;
+        public readonly int Depth;
         public int? BasinId;
     }
 }

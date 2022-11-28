@@ -2,7 +2,7 @@ using PuzzleSolver.Core;
 
 namespace AoC2021;
 
-public class Puzzle7 : BasePuzzle
+public class Puzzle07 : BasePuzzle
 {
     protected override void SolvePart1(IEnumerable<string> input)
     {

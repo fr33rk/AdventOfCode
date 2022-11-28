@@ -2,7 +2,7 @@ using PuzzleSolver.Core;
 
 namespace AoC2021;
 
-public class Puzzle2 : BasePuzzle
+public class Puzzle02 : BasePuzzle
 {
     private enum Command
     {
