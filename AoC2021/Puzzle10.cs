@@ -9,6 +9,7 @@ public class Puzzle10 : BasePuzzle
     {
         var chunkProcessor = new ChunkProcessor();
         var answer = 0;
+        var invalid = 0;
         foreach (var line in input)
         {
             foreach (var character in line.ToArray())
@@ -17,11 +18,13 @@ public class Puzzle10 : BasePuzzle
                 {
                     Console.WriteLine(line);
                     answer += score;
+                    invalid++;
                     break;
                 }
             }
             chunkProcessor.Reset();
         }
+        Console.WriteLine($"Invalid: {invalid}");
         
         Console.WriteLine($"Answer: {answer}");
     }
@@ -29,40 +32,41 @@ public class Puzzle10 : BasePuzzle
     protected override void SolvePart2(IEnumerable<string> input)
     {
         var chunkProcessor = new ChunkProcessor();
-        var answer = 0;
-        var totalScores = new List<int>();
-        
+        var lineIndex = 0;
+        var scores = new List<long>();
+
         foreach (var line in input)
         {
-            var invalid = false;
+            lineIndex++;
             chunkProcessor.Reset();
+            var invalid = false;
+            
             foreach (var character in line.ToArray())
             {
-                if (chunkProcessor.TryProcess(character, out _)) 
-                    continue;
-                
-                invalid = true;
-                break;
+                if (!chunkProcessor.TryProcess(character, out _))
+                {
+                    Console.WriteLine($"{lineIndex}: INVALID: {line}");
+                    invalid = true;
+                    break;
+                }
             }
 
-            if (invalid) 
+            if (invalid)
                 continue;
             
-            chunkProcessor.Complete(out var missing, out var points);
-
-            if (points <= 0) 
+            chunkProcessor.Complete(out var remaining, out var score);
+            if (score == 0)
+            {
+                Console.WriteLine($"{lineIndex}: VALID: {line}");
                 continue;
+            }
             
-            //Console.WriteLine($"{line} missing {missing}, points: {points}");
-            //Console.WriteLine($"{line} missing {missing}, points: {points}");
-            totalScores.Add(points);
+            Console.WriteLine($"{lineIndex}: INCOMPLETE: {line} - {remaining} ({score})");
+            scores.Add(score);
         }
 
-        totalScores.OrderBy(x => x).ForEach(x => Console.WriteLine(x));
-        
-        answer = totalScores.OrderBy(x => x).Skip(totalScores.Count / 2).First();
-        
-        Console.WriteLine($"Answer: {answer}");
+        var answer = scores.OrderBy(x => x).Skip(scores.Count / 2).First();
+        Console.WriteLine($"Answer {answer}");
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -120,7 +124,8 @@ public class Puzzle10 : BasePuzzle
                 ')' => 3,
                 ']' => 57,
                 '}' => 1197,
-                '>' => 25137
+                '>' => 25137,
+                _ => 0
             };
             
             return false;
@@ -131,10 +136,13 @@ public class Puzzle10 : BasePuzzle
             _pairStack.Clear();
         }
 
-        public void Complete(out string line, out int score)
+        public void Complete(out string line, out long score)
         {
             line = string.Empty;
             score = 0;
+
+            if (_pairStack.Count == 0)
+                return;
             
             while (_pairStack.TryPop(out var pair))
             {

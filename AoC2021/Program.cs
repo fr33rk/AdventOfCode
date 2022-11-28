@@ -18,7 +18,7 @@ var puzzle = (BasePuzzle)Activator.CreateInstance(puzzleTypes.Last())!;
     // Running all Puzzles
     // foreach (var puzzleType in puzzleTypes)
     // {
-    //     var puzzle = (BasePuzzle)Activator.CreateInstance(puzzleType)!;
-    //     puzzle.Solve();
+    //     var puzzleToSolve = (BasePuzzle)Activator.CreateInstance(puzzleType)!;
+    //     puzzleToSolve.Solve();
     // }
 #endif
