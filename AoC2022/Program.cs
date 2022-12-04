@@ -22,4 +22,5 @@ puzzle.Solve();
 // }
 #endif
 
+Console.Write("Press any key to close");
 Console.ReadKey();

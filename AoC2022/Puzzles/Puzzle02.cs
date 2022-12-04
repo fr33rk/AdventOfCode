@@ -20,7 +20,7 @@ public class Puzzle02 : BasePuzzle
         Draw
     }
     
-    protected override void SolvePart1(IEnumerable<string> input)
+    protected override long SolvePart1(IEnumerable<string> input)
     {
         var answer = input.Select(x =>
             {
@@ -33,11 +33,11 @@ public class Puzzle02 : BasePuzzle
             })
             .Select(round => Score(round.Oppenent, round.Me))
             .Sum();
-        
-        Console.WriteLine($"Answer: {answer}");
+
+        return answer;
     }
 
-    protected override void SolvePart2(IEnumerable<string> input)
+    protected override long SolvePart2(IEnumerable<string> input)
     {
         var answer = input.Select(x =>
             {
@@ -50,8 +50,8 @@ public class Puzzle02 : BasePuzzle
             })
             .Select(round => Score(round.Oppenent, round.Me))
             .Sum();
-        
-        Console.WriteLine($"Answer: {answer}");
+
+        return answer;
     }
 
     private static Shape ToShape(string s)
