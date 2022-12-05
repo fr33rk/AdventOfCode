@@ -53,7 +53,7 @@ public class Puzzle05 : BasePuzzle
         
         foreach (var line in input)
         {
-            var creatMatches = Regex.Matches(line, @"(\s{3}|\[\w\])", RegexOptions.Compiled);
+            var creatMatches = Regex.Matches(line, @"(\s{3}|\[\w\])(?=\s|$)", RegexOptions.Compiled);
             if (creatMatches.Any())
             {
                 if (!stackLists.Any())
