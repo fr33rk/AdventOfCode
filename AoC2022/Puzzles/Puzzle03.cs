@@ -46,7 +46,7 @@ public class Puzzle03 : BasePuzzle
         };
     }
 
-    private int ToValue(char c)
+    private static int ToValue(char c)
     {
         return c switch
         {

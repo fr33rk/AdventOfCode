@@ -1,4 +1,6 @@
-﻿using BenchmarkDotNet.Running;
+﻿#if BENCHMARK
+using BenchmarkDotNet.Running;
+#endif
 using PuzzleSolver.Core;
 
 var puzzleTypes = AppDomain.CurrentDomain.GetAssemblies()

@@ -7,18 +7,13 @@ public class Puzzle04 : BasePuzzle
     protected override long SolvePart1(IEnumerable<string> input)
     {
         return GetElfPairsFromInput(input)
-            .Count(assignments =>
-                (assignments.FirstElf.StartSector <= assignments.SecondElf.StartSector
-                 && assignments.FirstElf.EndSector >= assignments.SecondElf.EndSector)
-                || (assignments.FirstElf.StartSector >= assignments.SecondElf.StartSector
-                    && assignments.FirstElf.EndSector <= assignments.SecondElf.EndSector)
-            );
+            .Count(Overlaps);
     }
 
     protected override long SolvePart2(IEnumerable<string> input)
     {
        return GetElfPairsFromInput(input)
-            .Count(Overlaps);
+            .Count(PartlyOverlaps);
     }
     
     protected override IEnumerable<string> GetTestInput()
@@ -53,12 +48,18 @@ public class Puzzle04 : BasePuzzle
             EndSector: Convert.ToInt32(values[1]));
     }
 
-    private static bool Overlaps(ElfPair elfPair)
+    private static bool PartlyOverlaps(ElfPair elfPair)
     {
         return (elfPair.FirstElf.StartSector <= elfPair.SecondElf.EndSector
                 && elfPair.FirstElf.EndSector >= elfPair.SecondElf.StartSector);
     }
 
+    private static bool Overlaps(ElfPair elfPair)
+    {
+        return (elfPair.FirstElf.StartSector <= elfPair.SecondElf.StartSector && elfPair.FirstElf.EndSector >= elfPair.SecondElf.EndSector)
+            || (elfPair.FirstElf.StartSector >= elfPair.SecondElf.StartSector && elfPair.FirstElf.EndSector <= elfPair.SecondElf.EndSector);
+    }
+    
     private record ElfPair(Assignment FirstElf, Assignment SecondElf);
     
     private record Assignment(int StartSector, int EndSector);
