@@ -9,10 +9,10 @@ public class Puzzle03 : BasePuzzle
         input = input.ToList();
         var valueLength = input.First().Length;
         var splitInput = input.Select(c => c.ToCharArray()).ToList();
-        
+
         var gamma = 0;
         var epsilon = 0;
-        
+
         for (var index = 0; index < valueLength; index++)
         {
             gamma <<= 1;
@@ -22,7 +22,7 @@ public class Puzzle03 : BasePuzzle
             else
                 epsilon |= 1;
         }
-        
+
         Console.WriteLine(gamma);
         Console.WriteLine(epsilon);
         Console.WriteLine(gamma * epsilon);
@@ -40,7 +40,7 @@ public class Puzzle03 : BasePuzzle
         // Oxygen
         for (var index = 0; index < valueLength && oxygenInput.Count > 1; index++)
         {
-            var mostCommon = GetMostCommon(oxygenInput, index, '1' );
+            var mostCommon = GetMostCommon(oxygenInput, index, '1');
             oxygenInput = GetMatching(oxygenInput, mostCommon, index).ToList();
         }
 
@@ -49,7 +49,7 @@ public class Puzzle03 : BasePuzzle
         // Carbonoxide
         for (var index = 0; index < valueLength && carbonOxideInput.Count > 1; index++)
         {
-            var mostCommon = GetLeastCommon(carbonOxideInput, index, '0' );
+            var mostCommon = GetLeastCommon(carbonOxideInput, index, '0');
             carbonOxideInput = GetMatching(carbonOxideInput, mostCommon, index).ToList();
         }
 
@@ -80,7 +80,7 @@ public class Puzzle03 : BasePuzzle
             "01010"
         };
     }
-    
+
     private static char GetMostCommon(IEnumerable<char[]> input, int index, char preferred)
     {
         var sortedList = input
@@ -90,11 +90,11 @@ public class Puzzle03 : BasePuzzle
             .OrderByDescending(grp => grp.Count)
             .ToList();
 
-        return sortedList.First().Count == sortedList.Last().Count 
-            ? preferred 
+        return sortedList.First().Count == sortedList.Last().Count
+            ? preferred
             : sortedList.Select(grp => grp.Digit).First();
     }
-    
+
     private static char GetLeastCommon(IEnumerable<char[]> input, int index, char preferred)
     {
         var sortedList = input
@@ -104,16 +104,16 @@ public class Puzzle03 : BasePuzzle
             .OrderBy(grp => grp.Count)
             .ToList();
 
-        return sortedList.First().Count == sortedList.Last().Count 
-            ? preferred 
+        return sortedList.First().Count == sortedList.Last().Count
+            ? preferred
             : sortedList.Select(grp => grp.Digit).First();
     }
-    
+
     private static IEnumerable<char[]> GetMatching(IEnumerable<char[]> input, char match, int index)
     {
         return input.Where(s => s[index] == match);
     }
-        
+
     private static int ToInt(IEnumerable<char> binaryCode)
     {
         var retValue = 0;

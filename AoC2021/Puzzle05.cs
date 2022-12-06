@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using MoreLinq.Extensions;
 using PuzzleSolver.Core;
 
 namespace AoC2021;
@@ -13,7 +12,7 @@ public class Puzzle05 : BasePuzzle
             .ToList();
 
         var oceanFloor = CreateFittingOceanFloor(lines);
-        
+
         lines.ForEach(line => oceanFloor.AddLine(line));
         oceanFloor.ToConsole();
 
@@ -26,7 +25,7 @@ public class Puzzle05 : BasePuzzle
             .ToList();
 
         var oceanFloor = CreateFittingOceanFloor(lines);
-        
+
         lines.ForEach(line => oceanFloor.AddLine(line));
         oceanFloor.ToConsole();
 
@@ -59,8 +58,8 @@ public class Puzzle05 : BasePuzzle
             {
                 var match = lineRegex.Match(i);
                 return new Line(
-                    Start: new Point(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value)),
-                    End: new Point(Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value))
+                    new Point(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value)),
+                    new Point(Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value))
                 );
             });
     }
@@ -70,63 +69,60 @@ public class Puzzle05 : BasePuzzle
         var maxSize = lines
             .SelectMany(line => new List<int> { line.Start.X, line.Start.Y, line.End.X, line.End.Y })
             .Max();
-            
+
         return new OceanFloor(maxSize + 1);
     }
 
     private record Point(int X, int Y);
 
     private record Line(Point Start, Point End);
-    
+
     private class OceanFloor
     {
         private readonly short[,] _diagram;
 
         public OceanFloor(int size)
         {
-            _diagram = new short[size,size];
+            _diagram = new short[size, size];
         }
 
         public void ToConsole()
         {
             if (_diagram.GetLength(0) > 10)
                 return;
-            
+
             for (var x = 0; x < _diagram.GetLength(0); x++)
             {
                 for (var y = 0; y < _diagram.GetLength(1); y++)
                 {
-                    var value = _diagram[x,y];
+                    var value = _diagram[x, y];
                     Console.Write(value == 0 ? "." : value.ToString());
                 }
+
                 Console.WriteLine();
             }
         }
 
         public void AddLine(Line line)
         {
-            if (line.Start.Y == line.End.Y) 
+            if (line.Start.Y == line.End.Y)
             {
                 // Vertical line
                 for (var i = Math.Min(line.Start.X, line.End.X); i <= Math.Max(line.Start.X, line.End.X); i++)
-                {
                     _diagram[line.Start.Y, i]++;
-                }
             }
             else if (line.Start.X == line.End.X)
             {
                 // Horizontal line
                 for (var i = Math.Min(line.Start.Y, line.End.Y); i <= Math.Max(line.Start.Y, line.End.Y); i++)
-                {
                     _diagram[i, line.Start.X]++;
-                }
             }
             else
             {
                 var rc = (line.Start.X - line.End.X) / (line.Start.Y - line.End.Y);
                 var length = Math.Abs(line.Start.X - line.End.X);
-                var origen = line.Start.X < line.End.X ? line.Start : line.End; 
-                
+                var origen = line.Start.X < line.End.X ? line.Start : line.End;
+
                 for (var i = 0; i <= length; i++)
                 {
                     var x = origen.X + i;

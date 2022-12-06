@@ -5,7 +5,6 @@ var puzzleTypes = AppDomain.CurrentDomain.GetAssemblies()
     .Where(t => t.IsSubclassOf(typeof(BasePuzzle)))
     .ToList();
 
-
 var puzzle = (BasePuzzle)Activator.CreateInstance(puzzleTypes.Last())!;
 
 #if BENCHMARK

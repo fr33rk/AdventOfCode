@@ -15,13 +15,13 @@ public class Puzzle08 : BasePuzzle
     {
         var wires = input.Select(x => x.Replace("| ", "").Split(" "));
 
-        return  wires.Select(Decode).Sum().ToString();
+        return wires.Select(Decode).Sum().ToString();
     }
 
     private static int Decode(string[] hints)
     {
         var foundDigits = new Dictionary<short, char[]?>();
-        
+
         List<char[]?> sorted = hints.Select(x =>
         {
             var asChars = x.ToArray();
@@ -47,20 +47,20 @@ public class Puzzle08 : BasePuzzle
         foundDigits[9] = sixes.FirstOrDefault(w => Fits(w, foundDigits[1])
                                                    && Fits(w, foundDigits[4])
                                                    && Fits(w, foundDigits[7]));
-        
+
         foundDigits[0] = sixes.FirstOrDefault(w => Fits(w, foundDigits[1])
                                                    && !Fits(w, foundDigits[4])
                                                    && Fits(w, foundDigits[7]));
-        
+
         var fives = sorted.Where(w => w?.Length == 5).ToList();
 
         foundDigits[3] = fives.FirstOrDefault(w => Fits(w, foundDigits[1]));
 
-        foundDigits[2] = fives.FirstOrDefault(w => !Fits(w, foundDigits[1]) 
+        foundDigits[2] = fives.FirstOrDefault(w => !Fits(w, foundDigits[1])
                                                    && !Fits(foundDigits[6], w));
-        
-        foundDigits[5] = fives.FirstOrDefault(w => !Fits(w, foundDigits[1]) 
-                                          && Fits(foundDigits[6], w));
+
+        foundDigits[5] = fives.FirstOrDefault(w => !Fits(w, foundDigits[1])
+                                                   && Fits(foundDigits[6], w));
 
         var lastFour = sorted.Skip(hints.Length - 4).ToList();
 
@@ -84,14 +84,14 @@ public class Puzzle08 : BasePuzzle
     private static short GetDigit(Dictionary<short, char[]?> digitMap, char[]? digitToFit)
     {
         if (digitToFit == null)
-            throw new ArgumentNullException($"digitToFit is not allowed to be null");
-        
-        return digitMap.First(map => 
-            map.Value != null 
-            && map.Value.Length == digitToFit.Length 
+            throw new ArgumentNullException("digitToFit is not allowed to be null");
+
+        return digitMap.First(map =>
+            map.Value != null
+            && map.Value.Length == digitToFit.Length
             && map.Value.Intersect(digitToFit).Count() == digitToFit.Length).Key;
     }
-    
+
     private static bool TryFindDigit(int length, IEnumerable<char[]?> wires, out char[]? wiresForDigit)
     {
         var result = wires.FirstOrDefault(x => x?.Length == length);
@@ -104,7 +104,7 @@ public class Puzzle08 : BasePuzzle
         wiresForDigit = Array.Empty<char>();
         return false;
     }
-    
+
     protected override IEnumerable<string> GetTestInput()
     {
         return new[]
@@ -118,7 +118,7 @@ public class Puzzle08 : BasePuzzle
             "dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf | cefg dcbef fcge gbcadfe",
             "bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef",
             "egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb",
-            "gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce",
+            "gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce"
         };
     }
 }

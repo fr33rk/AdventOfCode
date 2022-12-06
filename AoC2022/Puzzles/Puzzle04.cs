@@ -13,11 +13,11 @@ public class Puzzle04 : BasePuzzle
 
     protected override string SolvePart2(IEnumerable<string> input)
     {
-       return GetElfPairsFromInput(input)
+        return GetElfPairsFromInput(input)
             .Count(PartlyOverlaps)
             .ToString();
     }
-    
+
     protected override IEnumerable<string> GetTestInput()
     {
         return new[]
@@ -37,8 +37,8 @@ public class Puzzle04 : BasePuzzle
             .Select(raw => raw.Split(','))
             .Select(rawAssignments =>
                 new ElfPair(
-                    FirstElf: ConvertAssignment(rawAssignments[0]),
-                    SecondElf: ConvertAssignment(rawAssignments[1])
+                    ConvertAssignment(rawAssignments[0]),
+                    ConvertAssignment(rawAssignments[1])
                 ));
     }
 
@@ -46,23 +46,25 @@ public class Puzzle04 : BasePuzzle
     {
         var values = rawAssignment.Split('-');
         return new Assignment(
-            StartSector: Convert.ToInt32(values[0]),
-            EndSector: Convert.ToInt32(values[1]));
+            Convert.ToInt32(values[0]),
+            Convert.ToInt32(values[1]));
     }
 
     private static bool PartlyOverlaps(ElfPair elfPair)
     {
-        return (elfPair.FirstElf.StartSector <= elfPair.SecondElf.EndSector
-                && elfPair.FirstElf.EndSector >= elfPair.SecondElf.StartSector);
+        return elfPair.FirstElf.StartSector <= elfPair.SecondElf.EndSector
+               && elfPair.FirstElf.EndSector >= elfPair.SecondElf.StartSector;
     }
 
     private static bool Overlaps(ElfPair elfPair)
     {
-        return (elfPair.FirstElf.StartSector <= elfPair.SecondElf.StartSector && elfPair.FirstElf.EndSector >= elfPair.SecondElf.EndSector)
-            || (elfPair.FirstElf.StartSector >= elfPair.SecondElf.StartSector && elfPair.FirstElf.EndSector <= elfPair.SecondElf.EndSector);
+        return (elfPair.FirstElf.StartSector <= elfPair.SecondElf.StartSector &&
+                elfPair.FirstElf.EndSector >= elfPair.SecondElf.EndSector)
+               || (elfPair.FirstElf.StartSector >= elfPair.SecondElf.StartSector &&
+                   elfPair.FirstElf.EndSector <= elfPair.SecondElf.EndSector);
     }
-    
+
     private record ElfPair(Assignment FirstElf, Assignment SecondElf);
-    
+
     private record Assignment(int StartSector, int EndSector);
 }

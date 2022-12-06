@@ -1,4 +1,3 @@
-using MoreLinq;
 using PuzzleSolver.Core;
 
 namespace AoC2021;
@@ -13,7 +12,6 @@ public class Puzzle10 : BasePuzzle
         foreach (var line in input)
         {
             foreach (var character in line.ToArray())
-            {
                 if (!chunkProcessor.TryProcess(character, out var score))
                 {
                     Console.WriteLine(line);
@@ -21,9 +19,10 @@ public class Puzzle10 : BasePuzzle
                     invalid++;
                     break;
                 }
-            }
+
             chunkProcessor.Reset();
         }
+
         Console.WriteLine($"Invalid: {invalid}");
 
         return answer.ToString();
@@ -40,27 +39,25 @@ public class Puzzle10 : BasePuzzle
             lineIndex++;
             chunkProcessor.Reset();
             var invalid = false;
-            
+
             foreach (var character in line.ToArray())
-            {
                 if (!chunkProcessor.TryProcess(character, out _))
                 {
                     Console.WriteLine($"{lineIndex}: INVALID: {line}");
                     invalid = true;
                     break;
                 }
-            }
 
             if (invalid)
                 continue;
-            
+
             chunkProcessor.Complete(out var remaining, out var score);
             if (score == 0)
             {
                 Console.WriteLine($"{lineIndex}: VALID: {line}");
                 continue;
             }
-            
+
             Console.WriteLine($"{lineIndex}: INCOMPLETE: {line} - {remaining} ({score})");
             scores.Add(score);
         }
@@ -87,22 +84,23 @@ public class Puzzle10 : BasePuzzle
 
     private class ChunkProcessor
     {
-        private readonly List<Pair> _pairs = new List<Pair>
+        private readonly Dictionary<char, Pair> _opening;
+
+        private readonly List<Pair> _pairs = new()
         {
-            new Pair('(',')'),
-            new Pair('{','}'),
-            new Pair('[',']'),
-            new Pair('<','>')
+            new('(', ')'),
+            new('{', '}'),
+            new('[', ']'),
+            new('<', '>')
         };
 
-        private readonly Dictionary<char, Pair> _opening;
         private readonly Stack<Pair> _pairStack = new();
-        
+
         public ChunkProcessor()
         {
             _opening = _pairs.ToDictionary(x => x.Opening, x => x);
         }
-        
+
         public bool TryProcess(char character, out int score)
         {
             score = 0;
@@ -126,7 +124,7 @@ public class Puzzle10 : BasePuzzle
                 '>' => 25137,
                 _ => 0
             };
-            
+
             return false;
         }
 
@@ -142,7 +140,7 @@ public class Puzzle10 : BasePuzzle
 
             if (_pairStack.Count == 0)
                 return;
-            
+
             while (_pairStack.TryPop(out var pair))
             {
                 line += pair.Closing;
@@ -157,7 +155,7 @@ public class Puzzle10 : BasePuzzle
                 };
             }
         }
-        
+
         private record Pair(char Opening, char Closing);
     }
 }

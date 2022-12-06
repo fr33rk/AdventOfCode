@@ -7,21 +7,21 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Benchmark' ">
-      <DefineConstants>TRACE;BENCHMARK</DefineConstants>
-      <Optimize>true</Optimize>
+        <DefineConstants>TRACE;BENCHMARK</DefineConstants>
+        <Optimize>true</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PuzzleSolver.Core\PuzzleSolver.Core.csproj" />
+        <ProjectReference Include="..\PuzzleSolver.Core\PuzzleSolver.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Inputs/*.txt" />
+        <EmbeddedResource Include="Inputs/*.txt"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
-      <PackageReference Include="morelinq" Version="3.3.2" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
+        <PackageReference Include="morelinq" Version="3.3.2"/>
     </ItemGroup>
 
 </Project>

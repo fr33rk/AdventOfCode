@@ -4,20 +4,6 @@ namespace AoC2022.Puzzles;
 
 public class Puzzle02 : BasePuzzle
 {
-    private enum Shape
-    {
-        Scissor,
-        Paper,
-        Rock
-    }
-
-    private enum Outcome
-    {
-        Win, 
-        Lose,
-        Draw
-    }
-    
     protected override string SolvePart1(IEnumerable<string> input)
     {
         var answer = input.Select(x =>
@@ -73,7 +59,7 @@ public class Puzzle02 : BasePuzzle
             _ => throw new ArgumentOutOfRangeException(nameof(s), s, null)
         };
     }
-    
+
     private static Shape FromOutCome(Shape opponent, Outcome outcome)
     {
         return opponent switch
@@ -102,7 +88,7 @@ public class Puzzle02 : BasePuzzle
             _ => throw new ArgumentOutOfRangeException(nameof(opponent), opponent, null)
         };
     }
-    
+
     private static int Score(Shape opponent, Shape me)
     {
         var score = me switch
@@ -114,19 +100,15 @@ public class Puzzle02 : BasePuzzle
         };
 
         if (opponent == me)
-        {
             score += 3;
-        }
         else if ((opponent == Shape.Paper && me == Shape.Scissor)
                  || (opponent == Shape.Rock && me == Shape.Paper)
                  || (opponent == Shape.Scissor && me == Shape.Rock))
-        {
             score += 6;
-        }
 
         return score;
     }
-    
+
     protected override IEnumerable<string> GetTestInput()
     {
         return new[]
@@ -135,5 +117,19 @@ public class Puzzle02 : BasePuzzle
             "B X",
             "C Z"
         };
+    }
+
+    private enum Shape
+    {
+        Scissor,
+        Paper,
+        Rock
+    }
+
+    private enum Outcome
+    {
+        Win,
+        Lose,
+        Draw
     }
 }

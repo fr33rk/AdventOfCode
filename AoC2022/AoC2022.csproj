@@ -8,15 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Inputs/*.txt" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\PuzzleSolver.Core\PuzzleSolver.Core.csproj" />
+        <EmbeddedResource Include="Inputs/*.txt"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="morelinq" Version="3.3.2" />
+        <ProjectReference Include="..\PuzzleSolver.Core\PuzzleSolver.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="morelinq" Version="3.3.2"/>
     </ItemGroup>
 
 </Project>

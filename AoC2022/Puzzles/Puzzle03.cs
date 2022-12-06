@@ -17,7 +17,7 @@ public class Puzzle03 : BasePuzzle
 
         return answer.ToString();
     }
-    
+
     protected override string SolvePart2(IEnumerable<string> input)
     {
         var answer = input

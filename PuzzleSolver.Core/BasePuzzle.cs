@@ -7,7 +7,7 @@ namespace PuzzleSolver.Core;
 public abstract class BasePuzzle
 {
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-    
+
     public void Solve()
     {
         var realInput = GetInput().ToList();
@@ -30,7 +30,7 @@ public abstract class BasePuzzle
     private void ExecuteSolve(string description, Func<string> solveAction)
     {
         var savedColor = Console.ForegroundColor;
-        
+
         _stopwatch.Restart();
         Console.WriteLine($"{GetType().Name}\t{description}");
         var answer = solveAction.Invoke();
@@ -54,21 +54,18 @@ public abstract class BasePuzzle
 
         if (assembly == null)
             return new List<string>();
-        
+
         var resourceName = $"{assembly.GetName().Name}.Inputs.{GetType().Name}.txt";
         using var stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream == null) 
+        if (stream == null)
             return new List<string>();
-        
+
         using var reader = new StreamReader(stream);
         return ReadLines(reader).ToList();
     }
 
     private static IEnumerable<string> ReadLines(TextReader reader)
     {
-        while (reader.ReadLine() is { } line)
-        {
-            yield return line;
-        }
+        while (reader.ReadLine() is { } line) yield return line;
     }
 }

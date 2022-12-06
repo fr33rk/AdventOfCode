@@ -20,7 +20,7 @@ public class Puzzle01 : BasePuzzle
 
         var topThree = elves.OrderByDescending(x => x)
             .Take(3);
-        
+
         return topThree.Sum().ToString();
     }
 

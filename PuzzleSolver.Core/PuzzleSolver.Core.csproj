@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Configurations>Debug;Release;Benchmark</Configurations>
-    <Platforms>AnyCPU</Platforms>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.2" />
-  </ItemGroup>
+    <PropertyGroup>
+        <Configurations>Debug;Release;Benchmark</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.2"/>
+    </ItemGroup>
 </Project>

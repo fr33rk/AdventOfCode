@@ -32,35 +32,24 @@ public class Puzzle09 : BasePuzzle
         {
             done = true;
             for (var y = 0; y < map.Length; y++)
+            for (var x = 0; x < map[y].Length; x++)
             {
-                for (var x = 0; x < map[y].Length; x++)
-                {
-                    if (map[y][x].BasinId != null)
-                        continue;
+                if (map[y][x].BasinId != null)
+                    continue;
 
-                    if (x - 1 >= 0 && map[y][x - 1].HasId)
-                    {
-                        map[y][x].BasinId = map[y][x - 1].BasinId;
-                    }
-                    else if (x + 1 < map[y].Length && map[y][x + 1].HasId)
-                    {
-                        map[y][x].BasinId = map[y][x + 1].BasinId;
-                    }
-                    else if (y - 1 >= 0 && map[y - 1][x].HasId)
-                    {
-                        map[y][x].BasinId = map[y - 1][x].BasinId;
-                    }
-                    else if (y + 1 < map.Length && map[y + 1][x].HasId)
-                    {
-                        map[y][x].BasinId = map[y + 1][x].BasinId;
-                    }
-                    else
-                    {
-                        done = false;
-                    }
-                }
+                if (x - 1 >= 0 && map[y][x - 1].HasId)
+                    map[y][x].BasinId = map[y][x - 1].BasinId;
+                else if (x + 1 < map[y].Length && map[y][x + 1].HasId)
+                    map[y][x].BasinId = map[y][x + 1].BasinId;
+                else if (y - 1 >= 0 && map[y - 1][x].HasId)
+                    map[y][x].BasinId = map[y - 1][x].BasinId;
+                else if (y + 1 < map.Length && map[y + 1][x].HasId)
+                    map[y][x].BasinId = map[y + 1][x].BasinId;
+                else
+                    done = false;
             }
         }
+
         PrintMap(map);
 
         var basins = map
@@ -68,7 +57,7 @@ public class Puzzle09 : BasePuzzle
             .Where(sample => sample.HasId)
             .GroupBy(sample => sample.BasinId)
             .Select(basin => new { Id = basin.Key, Size = basin.Count() });
-            
+
         var answer = basins
             .OrderByDescending(basin => basin.Size)
             .Take(3)
@@ -90,26 +79,24 @@ public class Puzzle09 : BasePuzzle
     private static void IdLowPoints(Sample[][] map)
     {
         var id = 0;
-        
-        for (var x = 0; x < map.Length; x++)
-        {
-            for (var y = 0; y < map[x].Length; y++)
-            {
-                var depthToCheck = map[x][y].Depth;
-                // Left
-                if (x - 1 >= 0 && map[x-1][y].Depth <= depthToCheck)
-                    continue;
-                // Right
-                if (x + 1 < map.Length && map[x+1][y].Depth <= depthToCheck)
-                    continue;
-                // Top
-                if (y - 1 >= 0 && map[x][y - 1].Depth <= depthToCheck) 
-                    continue;
-                if (y + 1 < map[x].Length && map[x][y+1].Depth <= depthToCheck)
-                    continue;
 
-                map[x][y].BasinId = id++;
-            }
+        for (var x = 0; x < map.Length; x++)
+        for (var y = 0; y < map[x].Length; y++)
+        {
+            var depthToCheck = map[x][y].Depth;
+            // Left
+            if (x - 1 >= 0 && map[x - 1][y].Depth <= depthToCheck)
+                continue;
+            // Right
+            if (x + 1 < map.Length && map[x + 1][y].Depth <= depthToCheck)
+                continue;
+            // Top
+            if (y - 1 >= 0 && map[x][y - 1].Depth <= depthToCheck)
+                continue;
+            if (y + 1 < map[x].Length && map[x][y + 1].Depth <= depthToCheck)
+                continue;
+
+            map[x][y].BasinId = id++;
         }
     }
 
@@ -152,7 +139,7 @@ public class Puzzle09 : BasePuzzle
             Console.WriteLine();
         }
     }
-    
+
     private struct Sample
     {
         public Sample(int depth, int? basinId)
@@ -160,7 +147,7 @@ public class Puzzle09 : BasePuzzle
             Depth = depth;
             BasinId = basinId;
         }
-        
+
         public bool HasId => BasinId != null && BasinId != int.MaxValue;
         public readonly int Depth;
         public int? BasinId;

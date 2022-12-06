@@ -4,13 +4,6 @@ namespace AoC2021;
 
 public class Puzzle02 : BasePuzzle
 {
-    private enum Command
-    {
-        Forward,
-        Down,
-        Up
-    }
-    
     protected override string SolvePart1(IEnumerable<string> input)
     {
         var commands = input.Select(c =>
@@ -42,19 +35,18 @@ public class Puzzle02 : BasePuzzle
         var depth = 0;
         var position = 0;
         var aim = 0;
-        
+
         var commands = input.Select(c =>
         {
             var split = c.Split(' ');
             return new
             {
-                Command = Enum.Parse<Command>(char.ToUpper(split[0][0]) + split[0][1..]), 
+                Command = Enum.Parse<Command>(char.ToUpper(split[0][0]) + split[0][1..]),
                 Distance = Convert.ToInt32(split[1])
             };
         });
-        
+
         foreach (var command in commands)
-        {
             switch (command.Command)
             {
                 case Command.Down:
@@ -68,8 +60,7 @@ public class Puzzle02 : BasePuzzle
                     aim -= command.Distance;
                     break;
             }
-        }
-        
+
         Console.WriteLine($"Depth: {depth}");
         Console.WriteLine($"Distance: {position}");
         Console.WriteLine($"Product: {depth * position}");
@@ -88,5 +79,12 @@ public class Puzzle02 : BasePuzzle
             "down 8",
             "forward 2"
         };
+    }
+
+    private enum Command
+    {
+        Forward,
+        Down,
+        Up
     }
 }

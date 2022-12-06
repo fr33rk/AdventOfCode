@@ -8,21 +8,20 @@ var puzzleTypes = AppDomain.CurrentDomain.GetAssemblies()
     .Where(t => t.IsSubclassOf(typeof(BasePuzzle)))
     .ToList();
 
-
 var puzzle = (BasePuzzle)Activator.CreateInstance(puzzleTypes.Last())!;
 
 #if BENCHMARK
     BenchmarkRunner.Run(puzzle.GetType());
 #else
-    // Running last puzzle
-    puzzle.Solve();
+// Running last puzzle
+puzzle.Solve();
 
-    // Running all Puzzles
-    // foreach (var puzzleType in puzzleTypes)
-    // {
-    //     var puzzleToSolve = (BasePuzzle)Activator.CreateInstance(puzzleType)!;
-    //     puzzleToSolve.Solve();
-    // }
+// Running all Puzzles
+// foreach (var puzzleType in puzzleTypes)
+// {
+//     var puzzleToSolve = (BasePuzzle)Activator.CreateInstance(puzzleType)!;
+//     puzzleToSolve.Solve();
+// }
 #endif
 
 Console.ReadKey();

@@ -1,8 +1,5 @@
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using BenchmarkDotNet.Attributes;
 using MoreLinq;
-using MoreLinq.Extensions;
 using PuzzleSolver.Core;
 
 namespace AoC2021;
@@ -12,7 +9,7 @@ public class Puzzle04 : BasePuzzle
     protected override string SolvePart1(IEnumerable<string> input)
     {
         input = input.ToList();
-        
+
         ProcessInput(input, out var bingoNumbers, out var bingoNotes);
 
         BingoNote? winner = null;
@@ -28,10 +25,10 @@ public class Puzzle04 : BasePuzzle
 
         if (winner == null)
             throw new InvalidOperationException("No winner found");
-        
+
         Console.WriteLine("Winner:");
         winner.ToConsole();
-        
+
         var sumOfAllUnticked = winner.SumOfAllUnTicked();
         Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
         return (sumOfAllUnticked * bingoNumber.Current).ToString();
@@ -40,7 +37,7 @@ public class Puzzle04 : BasePuzzle
     protected override string SolvePart2(IEnumerable<string> input)
     {
         input = input.ToList();
-        
+
         ProcessInput(input, out var bingoNumbers, out var bingoNotes);
 
         BingoNote? lastWinner = null;
@@ -69,10 +66,10 @@ public class Puzzle04 : BasePuzzle
 
         if (lastWinner == null)
             throw new InvalidOperationException("No winner found");
-        
+
         Console.WriteLine("Last winner:");
         lastWinner.ToConsole();
-        
+
         var sumOfAllUnticked = lastWinner.SumOfAllUnTicked();
         Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
         Console.WriteLine($"Answer: {sumOfAllUnticked * bingoNumber.Current}");
@@ -106,12 +103,13 @@ public class Puzzle04 : BasePuzzle
         };
     }
 
-    private static void ProcessInput(IEnumerable<string> input, out IEnumerable<int> bingoNumbers, out IList<BingoNote> bingoNotes)
+    private static void ProcessInput(IEnumerable<string> input, out IEnumerable<int> bingoNumbers,
+        out IList<BingoNote> bingoNotes)
     {
         var idGenerator = new IdGenerator();
 
         bingoNumbers = input.First().Split(',').Select(s => Convert.ToInt32(s));
-        
+
         input = input.Skip(2);
         bingoNotes = GetBingoNotes(idGenerator, input).ToList();
     }
@@ -127,7 +125,7 @@ public class Puzzle04 : BasePuzzle
 
     private class IdGenerator
     {
-        private int _current = 0;
+        private int _current;
 
         public int GetNext()
         {
@@ -137,62 +135,23 @@ public class Puzzle04 : BasePuzzle
 
     private class BingoNote
     {
-        private class BingoNumber
-        {
-            public int Number { get; }
-            public bool Ticked { get; private set; }
-
-            public BingoNumber(int number)
-            {
-                Number = number;
-                Ticked = false;
-            }
-
-            public void Tick()
-            {
-                Ticked = true;
-            }
-
-            public void ToConsole()
-            {
-                var savedBackgroundColor = Console.BackgroundColor;
-                var savedForegroundColor = Console.ForegroundColor;
-               
-                if (Ticked)
-                {
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.ForegroundColor = ConsoleColor.White; 
-                }
-
-                Console.Write($"{Number,3}");
-                
-                if (Ticked)
-                {
-                    Console.BackgroundColor = savedBackgroundColor;
-                    Console.ForegroundColor = savedForegroundColor;
-                }
-            }
-        }
-
         private readonly List<List<BingoNumber>> _horizontalLines;
-        private readonly List<List<BingoNumber>> _verticalLines;
         private readonly int _Id;
-        
-        public bool HasBingo { get; private set; }
-        
+        private readonly List<List<BingoNumber>> _verticalLines;
+
         private BingoNote(int id, IEnumerable<IEnumerable<BingoNumber>> bingoNumbers)
         {
             _Id = id;
             _horizontalLines = bingoNumbers.Select(x => x.ToList()).ToList();
             _verticalLines = new List<List<BingoNumber>>();
-            
+
             var columns = _horizontalLines.First().Count;
             for (var column = 0; column < columns; column++)
-            {
                 _verticalLines.Add(_horizontalLines.Select(line => line.ElementAt(column)).ToList());
-            }
         }
-        
+
+        public bool HasBingo { get; private set; }
+
 
         public static BingoNote FromStrings(int id, IEnumerable<string> input)
         {
@@ -201,7 +160,7 @@ public class Puzzle04 : BasePuzzle
             var numbers = input
                 .Select(line =>
                     regex.Matches(line).Select(m => new BingoNumber(Convert.ToInt32(m.Groups.Values.First().Value))));
-            
+
             return new BingoNote(id, numbers);
         }
 
@@ -209,14 +168,14 @@ public class Puzzle04 : BasePuzzle
         {
             var horizontalLine = _horizontalLines.FirstOrDefault(line => line.Any(n => n.Number == nextNumber));
 
-            if (horizontalLine == null) 
+            if (horizontalLine == null)
                 return false;
-            
+
             horizontalLine.First(n => n.Number == nextNumber).Tick();
             var verticalLine = _verticalLines.First(line => line.Any(n => n.Number == nextNumber));
 
             HasBingo = horizontalLine.All(n => n.Ticked)
-                      || verticalLine.All(n => n.Ticked);
+                       || verticalLine.All(n => n.Ticked);
 
             return HasBingo;
         }
@@ -238,6 +197,43 @@ public class Puzzle04 : BasePuzzle
                 .SelectMany(n => n)
                 .Where(n => !n.Ticked)
                 .Sum(n => n.Number);
+        }
+
+        private class BingoNumber
+        {
+            public BingoNumber(int number)
+            {
+                Number = number;
+                Ticked = false;
+            }
+
+            public int Number { get; }
+            public bool Ticked { get; private set; }
+
+            public void Tick()
+            {
+                Ticked = true;
+            }
+
+            public void ToConsole()
+            {
+                var savedBackgroundColor = Console.BackgroundColor;
+                var savedForegroundColor = Console.ForegroundColor;
+
+                if (Ticked)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+
+                Console.Write($"{Number,3}");
+
+                if (Ticked)
+                {
+                    Console.BackgroundColor = savedBackgroundColor;
+                    Console.ForegroundColor = savedForegroundColor;
+                }
+            }
         }
     }
 }

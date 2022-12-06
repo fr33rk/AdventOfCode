@@ -30,12 +30,12 @@ public class Puzzle07 : BasePuzzle
             .Split(',')
             .Select(x => Convert.ToInt32(x))
             .ToList();
-        
+
         var minPosition = crabPositions.Min();
         var maxPosition = crabPositions.Max();
         var bestPosition = 0;
         var minFuelUsed = int.MaxValue;
-        
+
         for (var testPosition = minPosition; testPosition <= maxPosition; testPosition++)
         {
             var totalFuel = crabPositions.Select(x => fuelCalculation(x, testPosition)).Sum();
