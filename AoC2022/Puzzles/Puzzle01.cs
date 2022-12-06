@@ -5,15 +5,15 @@ namespace AoC2022.Puzzles;
 
 public class Puzzle01 : BasePuzzle
 {
-    protected override void SolvePart1(IEnumerable<string> input)
+    protected override long SolvePart1(IEnumerable<string> input)
     {
         var elves = input.Split(x => x.Length == 0)
             .Select(elf => elf.Select(cal => Convert.ToInt32(cal)).Sum());
 
-        Console.WriteLine($"Answer: {elves.Max()}");
+        return elves.Max();
     }
 
-    protected override void SolvePart2(IEnumerable<string> input)
+    protected override long SolvePart2(IEnumerable<string> input)
     {
         var elves = input.Split(x => x.Length == 0)
             .Select(elf => elf.Select(cal => Convert.ToInt32(cal)).Sum());
@@ -21,7 +21,7 @@ public class Puzzle01 : BasePuzzle
         var topThree = elves.OrderByDescending(x => x)
             .Take(3);
         
-        Console.WriteLine($"Answer: {topThree.Sum()}");
+        return topThree.Sum();
     }
 
     protected override IEnumerable<string> GetTestInput()

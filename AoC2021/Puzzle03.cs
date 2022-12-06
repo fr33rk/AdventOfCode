@@ -4,7 +4,7 @@ namespace AoC2021;
 
 public class Puzzle03 : BasePuzzle
 {
-    protected override void SolvePart1(IEnumerable<string> input)
+    protected override long SolvePart1(IEnumerable<string> input)
     {
         input = input.ToList();
         var valueLength = input.First().Length;
@@ -26,11 +26,11 @@ public class Puzzle03 : BasePuzzle
         Console.WriteLine(gamma);
         Console.WriteLine(epsilon);
         Console.WriteLine(gamma * epsilon);
+
+        return gamma * epsilon;
     }
 
-    
-    
-    protected override void SolvePart2(IEnumerable<string> input)
+    protected override long SolvePart2(IEnumerable<string> input)
     {
         input = input.ToList();
         var oxygenInput = input.Select(c => c.ToCharArray()).ToList();
@@ -58,6 +58,8 @@ public class Puzzle03 : BasePuzzle
         Console.WriteLine($"Oxygen: {oxygen}");
         Console.WriteLine($"Carbon Oxide: {carbonOxide}");
         Console.WriteLine($"Life support: {oxygen * carbonOxide}");
+
+        return oxygen * carbonOxide;
     }
 
     protected override IEnumerable<string> GetTestInput()

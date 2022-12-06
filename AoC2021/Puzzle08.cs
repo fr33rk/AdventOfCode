@@ -4,20 +4,18 @@ namespace AoC2021;
 
 public class Puzzle08 : BasePuzzle
 {
-    protected override void SolvePart1(IEnumerable<string> input)
+    protected override long SolvePart1(IEnumerable<string> input)
     {
         var wires = input.Select(x => x.Replace("| ", "").Split(" "));
 
-        Console.WriteLine($"Answer: {wires.SelectMany(x => x.Skip(x.Length - 4)).Count(digit => digit.Length is 2 or 3 or 4 or 7)}");
+        return wires.SelectMany(x => x.Skip(x.Length - 4)).Count(digit => digit.Length is 2 or 3 or 4 or 7);
     }
 
-    protected override void SolvePart2(IEnumerable<string> input)
+    protected override long SolvePart2(IEnumerable<string> input)
     {
         var wires = input.Select(x => x.Replace("| ", "").Split(" "));
 
-        var answer = wires.Select(Decode).Sum();
-        
-        Console.WriteLine($"Answer: {answer}");
+        return  wires.Select(Decode).Sum();
     }
 
     private static int Decode(string[] hints)

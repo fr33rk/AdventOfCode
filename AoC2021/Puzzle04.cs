@@ -9,12 +9,12 @@ namespace AoC2021;
 
 public class Puzzle04 : BasePuzzle
 {
-    protected override void SolvePart1(IEnumerable<string> input)
+    protected override long SolvePart1(IEnumerable<string> input)
     {
         input = input.ToList();
         
         if (!input.Any())
-            return;
+            return default(long);
         
         ProcessInput(input, out var bingoNumbers, out var bingoNotes);
 
@@ -29,23 +29,23 @@ public class Puzzle04 : BasePuzzle
             //bingoNotes.ForEach(note => note.ToConsole());
         }
 
-        if (winner != null)
-        {
-            Console.WriteLine("Winner:");
-            winner.ToConsole();
-            
-            var sumOfAllUnticked = winner.SumOfAllUnTicked();
-            Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
-            Console.WriteLine($"Answer: {sumOfAllUnticked * bingoNumber.Current}");
-        }
+        if (winner == null)
+            throw new InvalidOperationException("No winner found");
+        
+        Console.WriteLine("Winner:");
+        winner.ToConsole();
+        
+        var sumOfAllUnticked = winner.SumOfAllUnTicked();
+        Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
+        return sumOfAllUnticked * bingoNumber.Current;
     }
 
-    protected override void SolvePart2(IEnumerable<string> input)
+    protected override long SolvePart2(IEnumerable<string> input)
     {
         input = input.ToList();
         
         if (!input.Any())
-            return;
+            return default(long);
         
         ProcessInput(input, out var bingoNumbers, out var bingoNotes);
 
@@ -73,19 +73,17 @@ public class Puzzle04 : BasePuzzle
             }
         }
 
-        if (lastWinner != null)
-        {
-            Console.WriteLine("Last winner:");
-            lastWinner.ToConsole();
-            
-            var sumOfAllUnticked = lastWinner.SumOfAllUnTicked();
-            Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
-            Console.WriteLine($"Answer: {sumOfAllUnticked * bingoNumber.Current}");
+        if (lastWinner == null)
+            throw new InvalidOperationException("No winner found");
+        
+        Console.WriteLine("Last winner:");
+        lastWinner.ToConsole();
+        
+        var sumOfAllUnticked = lastWinner.SumOfAllUnTicked();
+        Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
+        Console.WriteLine($"Answer: {sumOfAllUnticked * bingoNumber.Current}");
 
-            var answer = sumOfAllUnticked * bingoNumber.Current;
-            if (answer != 7686 && answer != 1924)
-                throw new InvalidOperationException("Refactor failed");
-        }
+        return sumOfAllUnticked * bingoNumber.Current;
     }
 
     protected override IEnumerable<string> GetTestInput()
