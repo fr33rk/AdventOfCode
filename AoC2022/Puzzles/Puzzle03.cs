@@ -4,7 +4,7 @@ namespace AoC2022.Puzzles;
 
 public class Puzzle03 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         var answer = input.Select(bag => new
             {
@@ -15,10 +15,10 @@ public class Puzzle03 : BasePuzzle
             .Select(ToValue)
             .Sum();
 
-        return answer;
+        return answer.ToString();
     }
     
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         var answer = input
             .Chunk(3)
@@ -30,7 +30,7 @@ public class Puzzle03 : BasePuzzle
             .Select(ToValue)
             .Sum();
 
-        return answer;
+        return answer.ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()

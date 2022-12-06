@@ -4,18 +4,18 @@ namespace AoC2021;
 
 public class Puzzle07 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
-        return Solve(input, (x, y) => Math.Abs(x - y));
+        return Solve(input, (x, y) => Math.Abs(x - y)).ToString();
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         return Solve(input, (x, y) =>
         {
             var distance = Math.Abs(x - y);
             return distance * (distance + 1) / 2;
-        });
+        }).ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()

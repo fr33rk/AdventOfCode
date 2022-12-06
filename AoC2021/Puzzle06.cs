@@ -6,7 +6,7 @@ namespace AoC2021;
 
 public class Puzzle06 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         var rawInput = input.FirstOrDefault();
         var lanternFishes = rawInput.Split(',').Select(x => Convert.ToInt32(x));
@@ -18,10 +18,10 @@ public class Puzzle06 : BasePuzzle
                 .Select(x => x == 0 ? 6 : --x);
         }
         
-        return lanternFishes.Count();
+        return lanternFishes.Count().ToString();
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         var rawInput = input.FirstOrDefault();
 
@@ -51,7 +51,7 @@ public class Puzzle06 : BasePuzzle
             embryoFishes = adultFishes[zeroIndex];
         }
         
-        return adultFishes.Sum() + babyFishes + childFishes;
+        return (adultFishes.Sum() + babyFishes + childFishes).ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()

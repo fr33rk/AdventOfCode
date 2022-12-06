@@ -5,7 +5,7 @@ namespace AoC2021;
 
 public class Puzzle10 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         var chunkProcessor = new ChunkProcessor();
         var answer = 0;
@@ -26,10 +26,10 @@ public class Puzzle10 : BasePuzzle
         }
         Console.WriteLine($"Invalid: {invalid}");
 
-        return answer;
+        return answer.ToString();
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         var chunkProcessor = new ChunkProcessor();
         var lineIndex = 0;
@@ -65,7 +65,7 @@ public class Puzzle10 : BasePuzzle
             scores.Add(score);
         }
 
-        return scores.OrderBy(x => x).Skip(scores.Count / 2).First();
+        return scores.OrderBy(x => x).Skip(scores.Count / 2).First().ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()

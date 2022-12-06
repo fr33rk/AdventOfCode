@@ -9,12 +9,9 @@ namespace AoC2021;
 
 public class Puzzle04 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         input = input.ToList();
-        
-        if (!input.Any())
-            return default(long);
         
         ProcessInput(input, out var bingoNumbers, out var bingoNotes);
 
@@ -37,15 +34,12 @@ public class Puzzle04 : BasePuzzle
         
         var sumOfAllUnticked = winner.SumOfAllUnTicked();
         Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
-        return sumOfAllUnticked * bingoNumber.Current;
+        return (sumOfAllUnticked * bingoNumber.Current).ToString();
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         input = input.ToList();
-        
-        if (!input.Any())
-            return default(long);
         
         ProcessInput(input, out var bingoNumbers, out var bingoNotes);
 
@@ -83,7 +77,7 @@ public class Puzzle04 : BasePuzzle
         Console.WriteLine($"Sum of unticked: {sumOfAllUnticked}");
         Console.WriteLine($"Answer: {sumOfAllUnticked * bingoNumber.Current}");
 
-        return sumOfAllUnticked * bingoNumber.Current;
+        return (sumOfAllUnticked * bingoNumber.Current).ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()

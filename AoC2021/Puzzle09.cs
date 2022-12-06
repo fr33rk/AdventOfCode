@@ -4,7 +4,7 @@ namespace AoC2021;
 
 public class Puzzle09 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         var map = ToMap(input);
 
@@ -18,10 +18,10 @@ public class Puzzle09 : BasePuzzle
             .Select(sample => sample.Depth + 1)
             .Sum();
 
-        return answer;
+        return answer.ToString();
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         var map = ToMap(input);
         IdLowPoints(map);
@@ -74,7 +74,7 @@ public class Puzzle09 : BasePuzzle
             .Take(3)
             .Aggregate(1, (acc, field) => acc * field.Size);
 
-        return answer;
+        return answer.ToString();
     }
 
     private static Sample[][] ToMap(IEnumerable<string> input)

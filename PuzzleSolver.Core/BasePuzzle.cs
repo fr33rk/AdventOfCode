@@ -27,7 +27,7 @@ public abstract class BasePuzzle
         ExecuteSolve("Part 2\tReal input", () => SolvePart2(realInput));
     }
 
-    private void ExecuteSolve(string description, Func<long> solveAction)
+    private void ExecuteSolve(string description, Func<string> solveAction)
     {
         var savedColor = Console.ForegroundColor;
         
@@ -42,9 +42,9 @@ public abstract class BasePuzzle
         Console.WriteLine();
     }
 
-    protected abstract long SolvePart1(IEnumerable<string> input);
+    protected abstract string SolvePart1(IEnumerable<string> input);
 
-    protected abstract long SolvePart2(IEnumerable<string> input);
+    protected abstract string SolvePart2(IEnumerable<string> input);
 
     protected abstract IEnumerable<string> GetTestInput();
 

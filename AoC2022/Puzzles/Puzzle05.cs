@@ -6,8 +6,9 @@ namespace AoC2022.Puzzles;
 
 public class Puzzle05 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
+        var answer = "";
         Split(input, out var stacks, out var instructions);
 
         foreach (var instruction in instructions)
@@ -18,14 +19,31 @@ public class Puzzle05 : BasePuzzle
             }
         }
         
-        stacks.ForEach(stack => Console.Write(stack.Peek()));
-        Console.WriteLine();
-        return default(long);
+        stacks.ForEach(stack => answer += stack.Peek());
+        return answer;
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
-        return default(long);
+        var answer = "";
+        Split(input, out var stacks, out var instructions);
+        var craneStack = new Stack<char>();
+        
+        foreach (var instruction in instructions)
+        {
+            for (var crateCount = 0; crateCount < instruction.Amount; crateCount++)
+            {
+                craneStack.Push(stacks[instruction.From-1].Pop());
+            }
+
+            for (var crateCount = 0; crateCount < instruction.Amount; crateCount++)
+            {
+                stacks[instruction.To-1].Push(craneStack.Pop());    
+            }
+        }
+        
+        stacks.ForEach(stack => answer += stack.Peek());
+        return answer;
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -44,7 +62,7 @@ public class Puzzle05 : BasePuzzle
         };
     }
 
-    private void Split(IEnumerable<string> input, out IList<Stack<char>> stacks,
+    private static void Split(IEnumerable<string> input, out IList<Stack<char>> stacks,
         out IList<Instruction> instructions)
     {
         instructions = new List<Instruction>();
@@ -53,37 +71,52 @@ public class Puzzle05 : BasePuzzle
         
         foreach (var line in input)
         {
-            var creatMatches = Regex.Matches(line, @"(\s{3}|\[\w\])(?=\s|$)", RegexOptions.Compiled);
-            if (creatMatches.Any())
+            var crateMatches = Regex.Matches(line, @"(\s{3}|\[\w\])(?=\s|$)", RegexOptions.Compiled);
+            if (crateMatches.Any())
             {
-                if (!stackLists.Any())
-                {
-                    for (var i = 0; i < creatMatches.Count; i++)
-                        stackLists.Add(new List<char>());
-                }
-
-                for (var stack = 0; stack < creatMatches.Count; stack++)
-                {
-                    var match = Regex.Match(creatMatches[stack].Value, @"\w");
-                    if (match.Success)
-                    {
-                        stackLists[stack].Add(match.Value[0]);
-                    }
-                }
+                SplitCreates(stackLists, crateMatches);
             }
             else
             {
-                var instructionMatches = Regex.Matches(line, @"\d+");
-                if (instructionMatches.Count == 3)
-                {
-                    instructions.Add(new Instruction(
-                        Convert.ToInt32(instructionMatches[0].Value),
-                        Convert.ToInt32(instructionMatches[1].Value),
-                        Convert.ToInt32(instructionMatches[2].Value)));
-                }
+                SplitInstructions(instructions, line);
             }
         }
 
+        CreateCrateStacks(stacks, stackLists);
+    }
+
+    private static void SplitCreates(IList<List<char>> stackLists, MatchCollection crateMatches)
+    {
+        if (!stackLists.Any())
+        {
+            for (var i = 0; i < crateMatches.Count; i++)
+                stackLists.Add(new List<char>());
+        }
+
+        for (var stack = 0; stack < crateMatches.Count; stack++)
+        {
+            var match = Regex.Match(crateMatches[stack].Value, @"\w");
+            if (match.Success)
+            {
+                stackLists[stack].Add(match.Value[0]);
+            }
+        }
+    }
+
+    private static void SplitInstructions(ICollection<Instruction> instructions, string line)
+    {
+        var match = Regex.Match(line, @"move (\d+) from (\d+) to (\d+)");
+        if (match.Success)
+        {
+            instructions.Add(new Instruction(
+                Convert.ToInt32(match.Groups[1].Value),
+                Convert.ToInt32(match.Groups[2].Value),
+                Convert.ToInt32(match.Groups[3].Value)));
+        }
+    }
+    
+    private static void CreateCrateStacks(ICollection<Stack<char>> stacks, List<List<char>> stackLists)
+    {
         foreach (var stackList in stackLists)
         {
             stacks.Add(new Stack<char>());

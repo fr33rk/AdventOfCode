@@ -5,7 +5,7 @@ namespace AoC2021;
 
 public class Puzzle11 : BasePuzzle
 {
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         var totalFlashes = 0;
         
@@ -35,12 +35,12 @@ public class Puzzle11 : BasePuzzle
             PrintGrid(grid);
         }
 
-        return totalFlashes;
+        return totalFlashes.ToString();
     }
     
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
-        return default(long);
+        return string.Empty;
     }
 
     private static void PrintGrid(short[][] grid)

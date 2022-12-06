@@ -11,7 +11,7 @@ public class Puzzle02 : BasePuzzle
         Up
     }
     
-    protected override long SolvePart1(IEnumerable<string> input)
+    protected override string SolvePart1(IEnumerable<string> input)
     {
         var commands = input.Select(c =>
             {
@@ -34,10 +34,10 @@ public class Puzzle02 : BasePuzzle
         Console.WriteLine($"Distance: {position}");
         Console.WriteLine($"Product: {depth * position}");
 
-        return depth * position;
+        return (depth * position).ToString();
     }
 
-    protected override long SolvePart2(IEnumerable<string> input)
+    protected override string SolvePart2(IEnumerable<string> input)
     {
         var depth = 0;
         var position = 0;
@@ -74,7 +74,7 @@ public class Puzzle02 : BasePuzzle
         Console.WriteLine($"Distance: {position}");
         Console.WriteLine($"Product: {depth * position}");
 
-        return depth * position;
+        return (depth * position).ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()
