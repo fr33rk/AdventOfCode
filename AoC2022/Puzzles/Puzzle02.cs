@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Diagnostics;
 using PuzzleSolver.Core;
 
 namespace AoC2022.Puzzles;
