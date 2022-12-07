@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using MoreLinq;
 using PuzzleSolver.Core;
 
 namespace AoC2022.Puzzles;
@@ -6,6 +9,40 @@ public class Puzzle07 : BasePuzzle
 {
     protected override string SolvePart1(IEnumerable<string> input)
     {
+        var toRootRegex = new Regex(@"\$ cd /", RegexOptions.Compiled);
+        var changeToFolderRegex = new Regex(@"\$ cd (\w+)", RegexOptions.Compiled);
+        var changeToPreviousRegex = new Regex(@"\$ cd \.\.", RegexOptions.Compiled);
+        var isFolderRegex = new Regex(@"dir (\w+)", RegexOptions.Compiled);
+
+        var folderStack = new Stack<FolderNode>();
+        var rootNode = new FolderNode(@"\");
+        
+        foreach (var line in input)
+        {
+            if (toRootRegex.IsMatch(line))
+            {
+                folderStack.Clear();
+                folderStack.Push(rootNode);
+            }
+            else if (isFolderRegex.IsMatch(line))
+            {
+                var folderName = isFolderRegex.Match(line).Groups[1].Value;
+                folderStack.Peek().AddNode(new FolderNode(folderName));
+            }
+            else if (changeToFolderRegex.IsMatch(line))
+            {
+                var folderName = changeToFolderRegex.Match(line).Groups[1].Value;
+                var folder = folderStack.Peek().GetFolder(folderName);
+                folderStack.Push(folder);
+            }
+            else if (changeToPreviousRegex.IsMatch(line)) 
+            {
+                folderStack.Pop();
+            }
+        }
+
+        rootNode.ToConsole(0);
+        
         return string.Empty;
         
         // Commands:
@@ -58,7 +95,7 @@ public class Puzzle07 : BasePuzzle
     {
         public string Name { get; }
 
-        public Node(string name)
+        protected Node(string name)
         {
             Name = name;
         }
@@ -68,28 +105,58 @@ public class Puzzle07 : BasePuzzle
         public abstract long GetSize();
     }
 
-    private class Folder : Node
+    private class FolderNode : Node
     {
-        private IList<Node> _ChildNodes = new List<Node>();
-        public IEnumerable<Node> ChildNodes => _ChildNodes;
+        private readonly IList<Node> _childNodes = new List<Node>();
 
-        public Folder(string name) : base(name)
+        public FolderNode(string name) : base(name)
         {
         }
 
         public void AddNode(Node childNode)
         {
-            _ChildNodes.Add(childNode);
+            if (_childNodes.SingleOrDefault(node => node.GetType() == childNode.GetType() && node.Name == childNode.Name) != null)
+            {
+                return;
+            }
+            
+            _childNodes.Add(childNode);
+        }
+
+        public override void ToConsole(int indent)
+        {
+            Console.WriteLine(new string('\t', indent) + $"- {Name} (dir)");
+            _childNodes.ForEach(node => node.ToConsole(indent + 1));
+        }
+
+        public override long GetSize()
+        {
+            return _childNodes.Select(node => GetSize()).Sum();
+        }
+
+        public FolderNode GetFolder(string name)
+        {
+            return _childNodes.OfType<FolderNode>().Single(node => node.Name == name);
         }
     }
 
     private class File : Node
     {
-        public long Size { get; }
+        private readonly long _size;
 
         public File(string name, long size) : base(name)
         {
-            Size = size;
+            _size = size;
+        }
+
+        public override void ToConsole(int indent)
+        {
+            Console.WriteLine(new string('\t', indent) + $"- {Name} (file, size={_size})");
+        }
+
+        public override long GetSize()
+        {
+            return _size;
         }
     }
 }
