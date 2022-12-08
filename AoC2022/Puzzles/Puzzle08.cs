@@ -38,9 +38,12 @@ public class Puzzle08 : BasePuzzle
         treeLine[0].MarkVisible();
         for (var treeIndex = 0; treeIndex < treeLine.Count - 1; treeIndex++)
         {
-            if (treeLine[treeIndex + 1].Height > treeLine[treeIndex].Height)
-                treeLine[treeIndex + 1].MarkVisible();
-            else
+            var treeToTest = treeLine[treeIndex + 1];
+            var treeToTestWith = treeLine[treeIndex];
+            
+            if (treeToTest.Height > treeToTestWith.Height)
+                treeToTest.MarkVisible();
+            else if (treeToTest.Height < treeToTestWith.Height)
                 break;
         }
     }
