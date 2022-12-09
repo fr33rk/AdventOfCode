@@ -33,18 +33,19 @@ public class Puzzle08 : BasePuzzle
         return forrest.Sum(line => line.Count(tree => tree.Visible)).ToString();
     }
 
-    private static void CheckVisibility(List<Tree> treeLine)
+    private static void CheckVisibility(IReadOnlyList<Tree> treeLine)
     {
         treeLine[0].MarkVisible();
-        for (var treeIndex = 0; treeIndex < treeLine.Count - 1; treeIndex++)
+        var highestTree = treeLine[0].Height;
+        for (var treeIndex = 1; treeIndex < treeLine.Count ; treeIndex++)
         {
-            var treeToTest = treeLine[treeIndex + 1];
-            var treeToTestWith = treeLine[treeIndex];
-            
-            if (treeToTest.Height > treeToTestWith.Height)
+            var treeToTest = treeLine[treeIndex];
+
+            if (treeToTest.Height > highestTree)
+            {
                 treeToTest.MarkVisible();
-            else if (treeToTest.Height < treeToTestWith.Height)
-                break;
+                highestTree = treeToTest.Height;
+            }
         }
     }
 
