@@ -6,52 +6,36 @@ public class Puzzle08 : BasePuzzle
 {
     protected override string SolvePart1(IEnumerable<string> input)
     {
-        var forrest = input.Select(line => line.Select(c => new Tree((short)char.GetNumericValue(c))).ToList()).ToList();
-        
-        
-        foreach (var treeLine in forrest)
+        var forrest = input.Select(line => line.Select(c => new Tree((short)char.GetNumericValue(c))).ToArray()).ToArray().ToMatrix();
+
+        for (var direction = 0; direction < 4; direction++)
         {
-            // West
-            CheckVisibility(treeLine);
-            
-            // East
-            CheckVisibility(treeLine.AsEnumerable().Reverse().ToList());
-        }
-
-        for (var treeIndex = 0; treeIndex < forrest[0].Count; treeIndex++)
-        {
-            var verticalLine = forrest.Select(treeline => treeline[treeIndex]);
-            
-            // North
-            CheckVisibility(verticalLine.ToList());
-            // South
-            CheckVisibility(verticalLine.Reverse().ToList());
-        }
-        
-        ForrestToConsole(forrest);
-
-        return forrest.Sum(line => line.Count(tree => tree.Visible)).ToString();
-    }
-
-    private static void CheckVisibility(IReadOnlyList<Tree> treeLine)
-    {
-        treeLine[0].MarkVisible();
-        var highestTree = treeLine[0].Height;
-        for (var treeIndex = 1; treeIndex < treeLine.Count ; treeIndex++)
-        {
-            var treeToTest = treeLine[treeIndex];
-
-            if (treeToTest.Height > highestTree)
+            for (var treeLineIndex = 0; treeLineIndex < forrest.GetLength(1); treeLineIndex++)
             {
-                treeToTest.MarkVisible();
-                highestTree = treeToTest.Height;
+                CheckVisibility(forrest.GetRow(treeLineIndex));
             }
+
+            forrest = forrest.RotateClockWise();
         }
+
+        return forrest.AsEnumerable().Count(tree => tree.Visible).ToString();
     }
 
     protected override string SolvePart2(IEnumerable<string> input)
     {
-        return string.Empty;
+        var forrest = input.Select(line => line.Select(c => new Tree((short)char.GetNumericValue(c))).ToArray()).ToArray().ToMatrix();
+
+        for (var direction = 0; direction < 4; direction++)
+        {
+            for (var treeLineIndex = 0; treeLineIndex < forrest.GetLength(1); treeLineIndex++)
+            {
+                CalculateScores(forrest.GetRow(treeLineIndex).ToList());
+            }
+
+            forrest = forrest.RotateClockWise();
+        }
+
+        return forrest.AsEnumerable().Max(tree => tree.Score).ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -65,7 +49,51 @@ public class Puzzle08 : BasePuzzle
             "35390",
         };
     }
-    
+
+    private static void CheckVisibility(IEnumerable<Tree> treeLine)
+    {
+        using var treeEnumerator = treeLine.GetEnumerator();
+        
+        if (!treeEnumerator.MoveNext())
+            return;
+        
+        treeEnumerator.Current.MarkVisible();
+        var highestTree = treeEnumerator.Current.Height;
+
+        while (treeEnumerator.MoveNext())
+        {
+            if (treeEnumerator.Current.Height <= highestTree) 
+                continue;
+
+            treeEnumerator.Current.MarkVisible();
+            highestTree = treeEnumerator.Current.Height;
+        }
+    }
+
+    private static void CalculateScores(ICollection<Tree> treeLine)
+    {
+        for (var treeIndex = 0; treeIndex < treeLine.Count; treeIndex++)
+        {
+            CalculateScore(treeLine.Skip(treeIndex).ToList());
+        }
+    }
+
+    private static void CalculateScore(IList<Tree> treeLine)
+    {
+        var treeToTest = treeLine.First();
+        var score = 0;
+        for (var i = 1; i < treeLine.Count; i++)
+        {
+            score++;
+
+            if (treeLine[i].Height >= treeToTest.Height)
+            {
+                break;
+            }
+        }
+        treeToTest.AddScore(score);
+    }
+
     private static void ForrestToConsole(IEnumerable<IEnumerable<Tree>> forrest)
     {
         var savedColor = Console.BackgroundColor;
@@ -86,8 +114,11 @@ public class Puzzle08 : BasePuzzle
     
     private class Tree
     {
+        private bool _isFirstScore = true;
+        
         public short Height { get; }
         public bool Visible { get; private set; }
+        public int Score { get; private set; }
 
         public Tree(short height)
         {
@@ -98,6 +129,16 @@ public class Puzzle08 : BasePuzzle
         {
             Visible = true;
         }
+
+        public void AddScore(int score)
+        {
+            if (_isFirstScore)
+            {
+                _isFirstScore = false;
+                Score = score;
+            }
+            else
+                Score *= score;
+        }
     }
-    
 }

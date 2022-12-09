@@ -4,6 +4,6 @@
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.2"/>
+        <PackageReference Include="BenchmarkDotNet.Annotations" Version="0.13.2" />
     </ItemGroup>
 </Project>
