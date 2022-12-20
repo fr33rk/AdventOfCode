@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using PuzzleSolver.Core;
 
@@ -23,11 +22,20 @@ public partial class Puzzle12 : BasePuzzle
         return answer.ToString();
     }
 
-    private record Sequence(string Name, int ID);
-    
     protected override string SolvePart2(IEnumerable<string> input)
     {
-        return string.Empty;
+        var packets = input
+            .Where(s => s.Length > 0)
+            .Append("[[2]]")
+            .Append("[[6]]")
+            .Select(Parse)
+            .OrderBy(p => p, new PacketComparer())
+            .ToList();
+
+        var two = packets.Single(element => element is ListElement { Elements: [ListElement { Elements: [ValueElement { Value: 2 }] } inner] } outer);
+        var six = packets.Single(element => element is ListElement { Elements: [ListElement { Elements: [ValueElement { Value: 6 }] } inner] } outer);
+
+        return ((packets.IndexOf(two) + 1) * (packets.IndexOf(six) + 1)).ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -60,14 +68,14 @@ public partial class Puzzle12 : BasePuzzle
         };
     }
 
-    private enum CompareResult
+    public enum CompareResult
     {
         Equal,
         Ordered,
         NotOrdered
     }
     
-    private static CompareResult IsOrdered(Element left, Element right)
+    public static CompareResult IsOrdered(Element left, Element right)
     {
         if (left is ValueElement leftValue)
         {
@@ -167,48 +175,63 @@ public partial class Puzzle12 : BasePuzzle
         }
     }
 
-    private abstract class Element
-    {
-    }
-
-    private class ValueElement : Element
-    {
-        public int Value { get; }
-
-        public ValueElement(int value)
-        {
-            Value = value;
-        }
-
-        public ListElement ToListElement()
-        {
-            return new ListElement(new Element[]{this});
-        }
-    }
-
-    private class ListElement : Element
-    {
-        public IList<Element> Elements { get; }
-
-        public ListElement()
-        {
-            Elements = new List<Element>();
-        }
-
-        public ListElement(IList<Element> elements)
-        {
-            Elements = elements;
-        }
-
-        public void AddElement(Element childElement)
-        {
-            Elements.Add(childElement);
-        }
-    }
-
     [GeneratedRegex("\\[(.*)\\]$", RegexOptions.Compiled)]
     private static partial Regex ListRegex();
 
     [GeneratedRegex(@"^(?<value>\d+),?(?<rest>.*)", RegexOptions.Compiled)]
     private static partial Regex ValueRegex();
+}
+
+public abstract class Element
+{
+}
+
+public class ValueElement : Element
+{
+    public int Value { get; }
+
+    public ValueElement(int value)
+    {
+        Value = value;
+    }
+
+    public ListElement ToListElement()
+    {
+        return new ListElement(new Element[]{this});
+    }
+}
+
+public class ListElement : Element
+{
+    public IList<Element> Elements { get; }
+
+    public ListElement()
+    {
+        Elements = new List<Element>();
+    }
+
+    public ListElement(IList<Element> elements)
+    {
+        Elements = elements;
+    }
+
+    public void AddElement(Element childElement)
+    {
+        Elements.Add(childElement);
+    }
+}
+
+public class PacketComparer : IComparer<Element>
+{
+    public int Compare(Element? x, Element? y)
+    {
+        var result = Puzzle12.IsOrdered(x, y);
+        return result switch
+        {
+            Puzzle12.CompareResult.Ordered => -1,
+            Puzzle12.CompareResult.Equal => 0,
+            Puzzle12.CompareResult.NotOrdered => 1,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 }
