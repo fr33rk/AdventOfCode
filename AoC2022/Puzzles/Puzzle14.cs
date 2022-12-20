@@ -1,4 +1,3 @@
-using MoreLinq;
 using PuzzleSolver.Core;
 
 namespace AoC2022.Puzzles;
@@ -79,22 +78,47 @@ public class Puzzle14 : BasePuzzle
         var linesFlat = lines.SelectMany(x => x).ToList();
         
         // Find out how large the cave is
-        var minX = linesFlat.Min(point => point.X);
-        var maxX = linesFlat.Max(point => point.X);
         var maxY = linesFlat.Max(point => point.Y);
-        
-        var width = maxY * 2;
-        
-        
-        
+        var offsetX = 500 - maxY - 3;
+
+        var width = (maxY + 4) * 2; 
         
         // Create the cave
-        var cave = new Material[maxY + 4, width];
+        var cave = new Material[maxY + 3, width];
         
+        // Add the bottom
+        DefineLine(cave, new Point2D(0, maxY + 2), new Point2D(width-1, maxY+2), Material.Rock);
+        
+        // Add the rock lines
+        var lineParts =
+            lines.Select(line =>
+                {
+                    var point2Ds = line.ToList();
+                    return point2Ds.Skip(1).Zip(point2Ds, (second, first) => new[] { first, second });
+                })
+                .SelectMany(x => x)
+                .ToList();
+
+        foreach (var linePart in lineParts)
+        {
+            var start = new Point2D(linePart.First().X - offsetX, linePart.First().Y);
+            var end = new Point2D(linePart.Last().X - offsetX, linePart.Last().Y);
+            
+            DefineLine(cave, start, end, Material.Rock);    
+        }
+        
+        var unitsOfSand = 0;
+        while (ProcessUnitOfSand(cave, new Point2D(500 - offsetX, 0)) == Result.Settled)
+        {
+            unitsOfSand++;
+            if (unitsOfSand == 48)
+                ToConsole(cave);
+        }
 
         
-        
-        return string.Empty;
+        ToConsole(cave);
+
+        return unitsOfSand.ToString();
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -117,7 +141,8 @@ public class Puzzle14 : BasePuzzle
                     Material.Air => ".",
                     Material.Rock => "#",
                     Material.Sand => "o",
-                    Material.TheVoid => "~"
+                    Material.TheVoid => "~",
+                    _ => throw new ArgumentOutOfRangeException()
                 });
             }
 
