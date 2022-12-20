@@ -3,7 +3,7 @@ using PuzzleSolver.Core;
 
 namespace AoC2022.Puzzles;
 
-public partial class Puzzle12 : BasePuzzle
+public partial class Puzzle13 : BasePuzzle
 {
     protected override string SolvePart1(IEnumerable<string> input)
     {
@@ -225,13 +225,17 @@ public class PacketComparer : IComparer<Element>
 {
     public int Compare(Element? x, Element? y)
     {
-        var result = Puzzle12.IsOrdered(x, y);
+        if (x == null || y == null) 
+            throw new InvalidOperationException("Comparing using null");
+
+        var result = Puzzle13.IsOrdered(x, y);
         return result switch
         {
-            Puzzle12.CompareResult.Ordered => -1,
-            Puzzle12.CompareResult.Equal => 0,
-            Puzzle12.CompareResult.NotOrdered => 1,
+            Puzzle13.CompareResult.Ordered => -1,
+            Puzzle13.CompareResult.Equal => 0,
+            Puzzle13.CompareResult.NotOrdered => 1,
             _ => throw new ArgumentOutOfRangeException()
         };
+
     }
 }
