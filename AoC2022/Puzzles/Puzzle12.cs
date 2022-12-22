@@ -29,7 +29,6 @@ public class Puzzle12 : BasePuzzle
         var possibleStarts = map.SelectMany(x => x).Where(pos => pos.Height == 'a');
 
         var shortestPath = int.MaxValue;
-        var evaluationCount = 0;
         foreach (var possibleStart in possibleStarts)
         {
             map.SelectMany(x => x).ForEach(pos => pos.Reset());
@@ -37,8 +36,6 @@ public class Puzzle12 : BasePuzzle
             var foundLength = AStar(map);
             if (foundLength > -1 && foundLength < shortestPath)
                 shortestPath = foundLength;
-            
-            //Console.WriteLine($"Attempt {evaluationCount++}, length: {foundLength}");
         }
         
         return shortestPath.ToString();
