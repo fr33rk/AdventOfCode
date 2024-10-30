@@ -1,9 +1,19 @@
 <Project>
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <BaseOutputPath>$(MSBuildThisFileDirectory)\bin\$(MSBuildProjectName)</BaseOutputPath>
         <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Configurations>Debug;Release;Benchmark</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Benchmark' ">
+        <DefineConstants>TRACE;BENCHMARK</DefineConstants>
+        <Optimize>true</Optimize>
     </PropertyGroup>
 </Project>

@@ -1,10 +1,8 @@
-using MoreLinq;
-using MoreLinq.Extensions;
 using PuzzleSolver.Core;
 
 namespace AoC2022.Puzzles;
 
-public class Puzzle09:BasePuzzle
+public class Puzzle09 : BasePuzzle
 {
     protected override string SolvePart1(IEnumerable<string> input)
     {
@@ -18,7 +16,7 @@ public class Puzzle09:BasePuzzle
 
         foreach (var command in commands)
         {
-            for(var step = 0; step < command.Steps; step++)
+            for (var step = 0; step < command.Steps; step++)
             {
                 head = command.Direction switch
                 {
@@ -33,13 +31,13 @@ public class Puzzle09:BasePuzzle
                 tailPositions.Add(tail);
             }
         }
-        
+
         return tailPositions.Distinct().Count().ToString();
     }
 
     protected override string SolvePart2(IEnumerable<string> input)
     {
-       
+
         var tailPositions = new List<Coordinate>();
         var rope = Enumerable.Repeat(new Coordinate(0, 0), 10).ToArray();
         var commands = input
@@ -99,7 +97,7 @@ public class Puzzle09:BasePuzzle
             "U 20"
         };
     }
-    
+
     private static Coordinate DetermineTail(Coordinate head, Coordinate tail)
     {
         // H H H H H 

@@ -1,27 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <Configurations>Debug;Release;Benchmark</Configurations>
-        <Platforms>AnyCPU</Platforms>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Benchmark' ">
-        <DefineConstants>TRACE;BENCHMARK</DefineConstants>
-        <Optimize>true</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\PuzzleSolver.Core\PuzzleSolver.Core.csproj"/>
+        <EmbeddedResource Include="Inputs/*.txt" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Inputs/*.txt"/>
+        <ProjectReference Include="..\PuzzleSolver.Core\PuzzleSolver.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
-        <PackageReference Include="morelinq" Version="3.3.2"/>
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+        <PackageReference Include="morelinq" Version="4.3.0" />
     </ItemGroup>
-
 </Project>

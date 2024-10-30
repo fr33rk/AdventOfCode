@@ -11,22 +11,22 @@ public partial class Puzzle15 : BasePuzzle
 
         // Test and real input have a different line of interest.
         var lineOfInterest = points.Count == 14 ? 10 : 2000000;
-        
+
         var answer = points
             .Select(point => GetCoveredPositions(point, lineOfInterest))
             .SelectMany(x => x)
             .GroupBy(position => position.X)
             .Count(group => !group.Any(position => position.HasBeacon));
-        
+
         return answer.ToString();
     }
 
     protected override string SolvePart2(IEnumerable<string> input)
     {
         var points = ProcessInput(input);
-        
-        
-        return answer.ToString();
+
+
+        return "Fail";
     }
 
     protected override IEnumerable<string> GetTestInput()
@@ -53,7 +53,7 @@ public partial class Puzzle15 : BasePuzzle
     private static List<SensorBeaconPair> ProcessInput(IEnumerable<string> input)
     {
         var pointsRegex = PointsRegex();
-        
+
         return input
             .Select(line => pointsRegex.Match(line).Groups)
             .Select(groups => new SensorBeaconPair(
@@ -67,7 +67,7 @@ public partial class Puzzle15 : BasePuzzle
             )
             .ToList();
     }
-    
+
     private IEnumerable<CoveredPosition> GetCoveredPositions(SensorBeaconPair sensorBeaconPair, int lineOfInterest)
     {
         var radius = Math.Abs(sensorBeaconPair.Beacon.X - sensorBeaconPair.Sensor.X)
@@ -91,19 +91,19 @@ public partial class Puzzle15 : BasePuzzle
         }
 
         var radiusAtLineOfInterest = radius - distanceToLineOfInterest;
-        var offSet = sensorBeaconPair.Sensor.X - radiusAtLineOfInterest; 
+        var offSet = sensorBeaconPair.Sensor.X - radiusAtLineOfInterest;
         var width = radiusAtLineOfInterest * 2 + 1;
 
         for (var x = 0; x < width; x++)
         {
             yield return new CoveredPosition(x + offSet, sensorBeaconPair.Beacon.Y == lineOfInterest && sensorBeaconPair.Beacon.X == x + offSet);
         }
-        
+
     }
 
     [GeneratedRegex(@".*?x=(?<sx>\-?\d+), y=(?<sy>\-?\d+).*?x=(?<bx>\-?\d+), y=(?<by>\-?\d+)", RegexOptions.Compiled)]
     private static partial Regex PointsRegex();
-    
+
     private record SensorBeaconPair(Coordinate Sensor, Coordinate Beacon);
 
     private record CoveredPosition(int X, bool HasBeacon);
