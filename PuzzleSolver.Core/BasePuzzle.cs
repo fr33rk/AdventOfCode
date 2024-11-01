@@ -12,10 +12,11 @@ public abstract class BasePuzzle
     {
         var realInput = GetInput().ToList();
         var testInput = GetTestInput().ToList();
+        var testInputPart2 = GetTestInputPart2().ToList();
 
         ExecuteSolve("Part 1\tTest input", () => SolvePart1(testInput));
         ExecuteSolve("Part 1\tReal input", () => SolvePart1(realInput));
-        ExecuteSolve("Part 2\tTest input", () => SolvePart2(testInput));
+        ExecuteSolve("Part 2\tTest input", () => SolvePart2(testInputPart2));
         ExecuteSolve("Part 2\tReal input", () => SolvePart2(realInput));
     }
 
@@ -47,6 +48,11 @@ public abstract class BasePuzzle
     protected abstract string SolvePart2(IEnumerable<string> input);
 
     protected abstract IEnumerable<string> GetTestInput();
+
+    protected virtual IEnumerable<string> GetTestInputPart2()
+    {
+        return GetTestInput();
+    }
 
     private IEnumerable<string> GetInput()
     {
